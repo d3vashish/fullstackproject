@@ -4,6 +4,8 @@ A simple task management app built with Next.js and Express.
 
 ## Setup
 
+### Without Docker
+
 **1. Install dependencies**
 
 ```bash
@@ -24,6 +26,14 @@ This runs both the backend (port 5000) and frontend (port 3000).
 **3. Open the app**
 
 Go to `http://localhost:3000`. Create an account and start adding tasks.
+
+### With Docker
+
+```bash
+docker compose up --build
+```
+
+Go to `http://localhost:3000`.
 
 ## What it does
 

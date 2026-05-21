@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useAuth } from "../../context/AuthContext";
 import TaskForm from "../../components/TaskForm";
+import { api } from "../../utils/api";
 
 export default function TaskDetail() {
   const router = useRouter();
@@ -29,9 +30,8 @@ export default function TaskDetail() {
 
   const fetchTask = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`);
-      if (!res.ok) throw new Error("Task not found");
-      setTask(await res.json());
+      const data = await api(`/api/tasks/${id}`);
+      setTask(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -41,23 +41,17 @@ export default function TaskDetail() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/users");
-      const data = await res.json();
+      const data = await api("/api/users");
       setUsers(data.users);
     } catch {}
   };
 
   const handleUpdate = async (taskData) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      await api(`/api/tasks/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(taskData),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message);
-      }
       await fetchTask();
       setEditing(false);
       setSuccess("Task updated");
@@ -69,12 +63,10 @@ export default function TaskDetail() {
 
   const handleMarkComplete = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      await api(`/api/tasks/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "Done" }),
       });
-      if (!res.ok) throw new Error("Failed");
       await fetchTask();
       setSuccess("Marked as complete");
       setTimeout(() => setSuccess(""), 3000);

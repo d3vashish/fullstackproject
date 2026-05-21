@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { api } from "../utils/api";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -15,13 +16,10 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/users/register", {
+      await api("/api/users/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
       router.push("/login");
     } catch (err) {
       setError(err.message);

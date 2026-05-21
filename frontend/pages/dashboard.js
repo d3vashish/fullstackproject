@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import TaskCard from "../components/TaskCard";
 import TaskForm from "../components/TaskForm";
 import FilterBar from "../components/FilterBar";
+import { api } from "../utils/api";
 
 export default function Dashboard() {
   const { user, isLoggedIn, logout } = useAuth();
@@ -31,8 +32,7 @@ export default function Dashboard() {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/tasks");
-      const data = await res.json();
+      const data = await api("/api/tasks");
       setTasks(data.tasks);
     } catch {
       setError("Failed to load tasks");
@@ -43,23 +43,17 @@ export default function Dashboard() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/users");
-      const data = await res.json();
+      const data = await api("/api/users");
       setUsers(data.users);
     } catch {}
   };
 
   const handleCreate = async (taskData) => {
     try {
-      const res = await fetch("http://localhost:5000/api/tasks", {
+      await api("/api/tasks", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...taskData, createdBy: user.id }),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message);
-      }
       await fetchTasks();
       setShowForm(false);
     } catch (err) {
@@ -70,7 +64,7 @@ export default function Dashboard() {
   const handleDelete = async (taskId) => {
     if (!confirm("Delete this task?")) return;
     try {
-      await fetch(`http://localhost:5000/api/tasks/${taskId}`, { method: "DELETE" });
+      await api(`/api/tasks/${taskId}`, { method: "DELETE" });
       await fetchTasks();
     } catch {
       setError("Failed to delete");

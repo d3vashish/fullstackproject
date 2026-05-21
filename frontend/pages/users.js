@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import { api } from "../utils/api";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -11,8 +12,7 @@ export default function Users() {
 
   useEffect(() => {
     if (!isLoggedIn) { router.push("/login"); return; }
-    fetch("http://localhost:5000/api/users")
-      .then((r) => r.json())
+    api("/api/users")
       .then((d) => setUsers(d.users))
       .catch(() => {})
       .finally(() => setLoading(false));
