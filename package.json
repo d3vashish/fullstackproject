@@ -1,0 +1,14 @@
+{
+  "name": "smart-task-manager",
+  "version": "1.0.0",
+  "description": "Smart Task Manager - Full Stack Web Application",
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "install-all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
