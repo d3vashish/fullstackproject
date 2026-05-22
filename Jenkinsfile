@@ -16,56 +16,6 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-
-            parallel {
-
-                stage('Backend Install') {
-                    steps {
-                        dir('backend') {
-                            sh 'npm install'
-                        }
-                    }
-                }
-
-                stage('Frontend Install') {
-                    steps {
-                        dir('frontend') {
-                            sh 'npm install'
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Build & Test') {
-
-            parallel {
-
-                stage('Backend Build') {
-                    steps {
-                        dir('backend') {
-                            sh '''
-                            npm run build || echo "No backend build step"
-                            npm test || echo "No backend tests"
-                            '''
-                        }
-                    }
-                }
-
-                stage('Frontend Build') {
-                    steps {
-                        dir('frontend') {
-                            sh '''
-                            npm run build
-                            npm test || echo "No frontend tests"
-                            '''
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Build Docker Images') {
 
             parallel {
