@@ -22,6 +22,7 @@ pipeline {
 
                 stage('Build Backend Image') {
                     steps {
+
                         dir('backend') {
 
                             sh """
@@ -35,6 +36,7 @@ pipeline {
 
                 stage('Build Frontend Image') {
                     steps {
+
                         dir('frontend') {
 
                             sh """
@@ -49,10 +51,6 @@ pipeline {
         }
 
         stage('Push Docker Images') {
-
-            when {
-                branch 'main'
-            }
 
             steps {
 
@@ -80,14 +78,11 @@ pipeline {
 
         stage('Deploy') {
 
-            when {
-                branch 'main'
-            }
-
             steps {
 
                 sh '''
                 docker compose down || true
+                docker compose pull
                 docker compose up -d
                 '''
             }
